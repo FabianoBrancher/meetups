@@ -22,7 +22,7 @@ class MeetupController {
 
     const meetup = await Meetup.create({ ...data, owner_id: auth.user.id }, trx)
 
-    if (users && users.length > 0) {
+    if (preferences && preferences.length > 0) {
       await meetup.users().attach(users)
       meetup.users = await meetup.users().fetch()
     }

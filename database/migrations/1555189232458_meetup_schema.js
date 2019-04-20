@@ -7,17 +7,17 @@ class MeetupSchema extends Schema {
     this.create('meetups', table => {
       table.increments()
       table
-        .integer('owner_id')
+        .integer('user_id')
         .unsigned()
         .references('id')
         .inTable('users')
-        .onDelete('cascade')
-        .onUpdate('set null')
+        .onDelete('CASCADE')
+        .onUpdate('SET NULL')
       table.string('title').notNullable()
-      table.string('description').notNullable()
-      table.timestamp('date').notNullable()
-      table.string('image').notNullable()
+      table.text('description').notNullable()
+      table.string('image_url').notNullable()
       table.string('location').notNullable()
+      table.timestamp('date').notNullable()
       table.timestamps()
     })
   }
