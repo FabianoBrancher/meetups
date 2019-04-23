@@ -20,12 +20,12 @@ class MeetupController {
 
     const trx = await Database.beginTransaction()
 
-    const meetup = await Meetup.create({ ...data, owner_id: auth.user.id }, trx)
+    const meetup = await Meetup.create({ ...data, user_id: auth.user.id }, trx)
 
-    if (preferences && preferences.length > 0) {
-      await meetup.users().attach(users)
-      meetup.users = await meetup.users().fetch()
-    }
+    // if (preferences && preferences.length > 0) {
+    //   await meetup.preferences().attach(preferences)
+    //   meetup.preferences = await meetup.preferences().fetch()
+    // }
 
     await trx.commit()
 

@@ -10,6 +10,25 @@ class UserController {
 
     return user
   }
+
+  async update ({ params, request, response, auth }) {
+    const user = await User.findOrFail(params.id)
+
+
+    console.log(request.body)
+
+    const data = {
+      username,
+      email,
+      password,
+      password_confirmation,
+      preferences
+    } = request.post()
+
+    
+    
+
+  }
 }
 
 module.exports = UserController

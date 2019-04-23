@@ -14,5 +14,6 @@ Route.post('/files', 'FileController.store')
 Route.get('meetups', 'MeetupController.index')
 
 Route.group(() => {
+  Route.put('/users/:id', 'UserController.update')
   Route.post('meetups', 'MeetupController.store')
 }).middleware(['auth'])
