@@ -3,30 +3,32 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class UserMeetupSchema extends Schema {
+class UserPreferenceSchema extends Schema {
   up () {
-    this.create('user_meetup', table => {
+    this.create('user_preferences', (table) => {
       table.increments()
       table
         .integer('user_id')
         .unsigned()
         .references('id')
         .inTable('users')
-        .onDelete('cascade')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');    
       table
-        .integer('meetup_id')
+        .integer('preference_id')
         .unsigned()
         .references('id')
-        .inTable('meetups')
-        .onDelete('cascade')
-
+        .inTable('preferences')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+  
       table.timestamps()
     })
   }
 
   down () {
-    this.drop('user_meetup')
+    this.drop('user_preferences')
   }
 }
 
-module.exports = UserMeetupSchema
+module.exports = UserPreferenceSchema

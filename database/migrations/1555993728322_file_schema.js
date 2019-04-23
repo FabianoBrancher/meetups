@@ -10,7 +10,7 @@ class FileSchema extends Schema {
       table.string('file').notNullable()
       table.string('name').notNullable()
       table.string('type', 20)
-      table.string('subtype', 20)
+      table.string('subtype', 20)      
       table.timestamps()
     })
   }

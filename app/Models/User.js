@@ -19,12 +19,23 @@ class User extends Model {
   }
 
   meetups () {
-    return this.belongsToMany('App/Models/Meetup').pivotTable('user_meetup')
+    return this
+      .belongsToMany('App/Models/Meetup')
+      .pivotTable('user_meetups')
+      .pivotModel('App/Models/UserMeetup')
+  }
+
+  preferences () {
+    return this
+      .belongsToMany('App/Models/Preference')
+      .pivotTable('user_preferences')
+      .pivotModel('App/Models/UserPreference')
   }
 
   tokens () {
     return this.hasMany('App/Models/Token')
   }
+
 }
 
 module.exports = User
