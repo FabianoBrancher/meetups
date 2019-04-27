@@ -8,7 +8,7 @@ class MeetupController {
   async index ({ request }) {
     const { page } = request.get()
     const meetups = Meetup.query()
-      .with('users')
+      .with('users', builder => builder.select('id', 'username','email'))
       .paginate(page)
 
     return meetups
@@ -45,7 +45,14 @@ class MeetupController {
     return meetup
   }
 
-  async show ({ params, request, response, view }) {}
+  async show ({ params, request, response, view }) {
+    const meetup = await Meetup.findOrFail(params.id)
+
+    meetup.users = await meetup.users().fetch()
+    meetup.subscribers = await meetup.users().count()
+
+    return meetup
+  }
 
   async update ({ params, request, response, auth }) {
     const meetup = await Meetup.findOrFail(params.id)
@@ -71,7 +78,17 @@ class MeetupController {
     return meetup
   }
 
-  async destroy ({ params, request, response }) {}
+  async destroy ({ params, response, auth }) {
+    const meetup = await Meetup.findOrFail(params.id)
+
+    if (meetup.user_id !== auth.user.id) {
+      return response.status(401).send({ error: { message: 'Você não é o dono desta Meetup.'}})
+    }
+
+    await meetup.delete()
+
+    return response.status(200).send({ success: { message: 'Meetup excluído.'}})
+  }
 }
 
 module.exports = MeetupController
