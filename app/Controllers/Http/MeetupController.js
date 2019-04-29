@@ -1,16 +1,32 @@
 'use strict'
 
 const Env = use('Env')
-const Database = use('Database')
 const Meetup = use('App/Models/Meetup')
 
 class MeetupController {
   async index ({ request }) {
-    const { page } = request.get()
-    const meetups = Meetup.query()
-      .with('users', builder => builder.select('id', 'username','email'))
-      .paginate(page)
+    const { page } = request.get() || 1
+    
+    // let filters = {}
+    // filters.type = request.get()
+    // filtro por título
+    // if (!!filters.type.title) {
+    //   const meetups = await Meetup.query()
+    //     .where('title', 'like', `%${filters.type.title}%`)
+    //     .orderBy('created_at', 'desc')
+    //     .paginate(page)
+    //   return meetups
+    // }
+    // // filtro recomendados (de acordo com preferências)
+    // if (!!filters.type.recommended) {
+    //     console.log('filtrando recomendados')
+    // }
+        
 
+    const meetups = await Meetup.query()
+      .with('users', builder => builder.select('id', 'username','email'))
+      .orderBy('id')
+      .paginate(page)
     return meetups
   }
 

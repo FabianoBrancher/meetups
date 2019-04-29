@@ -14,8 +14,8 @@ class SubscribeController {
             .with('users')
             .whereHas('users', builder => builder.where('user_id', auth.user.id))
             .fetch()
-
-        if (!!isRegistered.toJSON().length) {
+        
+        if (isRegistered.toJSON().length > 0) {
             return response.status(401).send({ error: { message: 'Você já está inscrito nesta Meetup.'}})
         }
 
@@ -30,7 +30,22 @@ class SubscribeController {
     async destroy ({ params, response, auth }) {
         const meetup = await Meetup.findOrFail(params.id)
 
-        return response.status(200).send({ success: { message: 'Você se desinscreveu deste Meetup.'}})
+        const isRegistered = await Meetup
+            .query()
+            .where('id', params.id)
+            .with('users')
+            .whereHas('users', builder => builder.where('user_id', auth.user.id))
+            .fetch()
+    
+        if (isRegistered.toJSON().length > 0) {
+            
+            await meetup.users().detach(auth.user.id)
+            await meetup.save()
+
+            return response.status(200).send({ success: { message: 'Você cancelou a sua inscrição neste meetup.'}})
+        }
+
+        return response.status(200).send({ error: { message: 'Você não está inscrito nesta Meetup.'}})
     }
 }
 
